@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BizHub • Enterprise Commerce & Service Portal</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand-group">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">
+            <span>BizHub</span>
+            <span class="role-badge" id="roleBadge">CLIENT PORTAL</span>
+          </div>
+          <p class="brand-subtitle">Commercial Ordering, Real-time Tracking & Deliverables</p>
+        </div>
+      </div>
+
+      <nav class="nav-links" id="clientNav">
+        <button class="nav-btn active" data-tab="catalog">Catalog</button>
+        <button class="nav-btn" data-tab="services">Services</button>
+        <button class="nav-btn" data-tab="tracking">Orders & Tracking</button>
+        <button class="nav-btn" data-tab="profile">Profile & Files</button>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Firebase Status Indicator -->
+        <button class="firebase-status-btn" id="firebaseConfigBtn" title="Firebase Backend Settings">
+          <span class="status-dot" id="firebaseDot"></span>
+          <span id="firebaseStatusText">Local Storage</span>
+        </button>
+
+        <!-- Role Toggle Button -->
+        <button class="role-toggle-btn" id="roleToggleBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7.5" r="4"></circle>
+            <polyline points="17 11 19 13 23 9"></polyline>
+          </svg>
+          <span id="roleToggleLabel">Switch to Admin</span>
+        </button>
+
+        <!-- Cart Button (Client View) -->
+        <button class="cart-btn" id="openCartBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-count" id="cartCountBadge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- MAIN APPLICATION CONTENT -->
+  <main class="main-content">
+
+    <!-- ==================== TAB 1: CATALOG ==================== -->
+    <section id="catalogTab" class="tab-pane active">
+      <div class="content-header">
+        <div>
+          <h2>Commercial Products & Materials</h2>
+          <p class="section-desc">Browse inventory, verify real-time stock availability, and place orders.</p>
+        </div>
+        <div class="search-filter-bar">
+          <input type="text" id="catalogSearchInput" placeholder="Search by product name, SKU, or specs...">
+          <div class="category-chips" id="categoryChips"></div>
+        </div>
+      </div>
+
+      <div class="products-grid" id="productsGrid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: SERVICES ==================== -->
+    <section id="servicesTab" class="tab-pane">
+      <div class="services-hero">
+        <div class="services-hero-content">
+          <h2>Specialized Engineering & Technical Services</h2>
+          <p>Submit customized work orders, fabrication requests, and security audits directly to our engineering division. Receive milestone approvals and certified PDF reports.</p>
+          <button class="btn btn-primary" id="openServiceModalBtn">+ Request Custom Service</button>
+        </div>
+      </div>
+
+      <h3 class="section-heading">Available Service Capabilities</h3>
+      <div class="services-grid" id="servicesGrid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: TRACKING & DELIVERABLES ==================== -->
+    <section id="trackingTab" class="tab-pane">
+      <div class="content-header">
+        <div>
+          <h2>Real-time Order & Service Tracking</h2>
+          <p class="section-desc">Live production timelines, approval remarks, and official admin deliverables.</p>
+        </div>
+        <div class="filter-pills">
+          <button class="pill-btn active" data-filter="all">All Requests</button>
+          <button class="pill-btn" data-filter="orders">Commercial Orders</button>
+          <button class="pill-btn" data-filter="services">Custom Services</button>
+        </div>
+      </div>
+
+      <div class="tracking-list" id="trackingList">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: PROFILE & FILES ==================== -->
+    <section id="profileTab" class="tab-pane">
+      <div class="profile-layout">
+        <!-- Profile Overview Card -->
+        <div class="card profile-card">
+          <div class="profile-header">
+            <div class="avatar-circle">AC</div>
+            <div>
+              <h3 id="profileNameDisplay">Alex Chen</h3>
+              <p id="profileCompanyDisplay" class="text-muted">Nexus Tech Industries Ltd.</p>
+              <span class="tier-badge" id="profileTierDisplay">Gold Enterprise Tier</span>
+            </div>
+            <button class="btn btn-outline btn-sm" id="editProfileBtn">Edit Profile</button>
+          </div>
+
+          <div class="profile-details" id="profileDetailsView">
+            <div class="detail-row">
+              <span class="detail-label">Email:</span>
+              <span id="profileEmailDisplay">alex.chen@nexuscorp.com</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Phone:</span>
+              <span id="profilePhoneDisplay">+1 (555) 234-8901</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Shipping Address:</span>
+              <span id="profileAddressDisplay">Suite 400, 750 Enterprise Blvd, Tech District, CA 94105</span>
+            </div>
+          </div>
+
+          <!-- Edit Profile Form (Hidden by default) -->
+          <form class="edit-profile-form hidden" id="editProfileForm">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="editNameInput" required>
+            </div>
+            <div class="form-group">
+              <label>Company</label>
+              <input type="text" id="editCompanyInput" required>
+            </div>
+            <div class="form-group">
+              <label>Business Email</label>
+              <input type="email" id="editEmailInput" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="text" id="editPhoneInput" required>
+            </div>
+            <div class="form-group">
+              <label>Shipping Destination</label>
+              <textarea id="editAddressInput" rows="2" required></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-outline" id="cancelProfileBtn">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="profile-metrics">
+          <div class="metric-card">
+            <span class="metric-label">Total Orders</span>
+            <span class="metric-val" id="profileOrdersCount">0</span>
+            <span class="metric-sub">Commercial</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Active Projects</span>
+            <span class="metric-val" id="profileServicesCount">0</span>
+            <span class="metric-sub">Services</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Total Invested</span>
+            <span class="metric-val" id="profileTotalSpent">$0.00</span>
+            <span class="metric-sub">Account Volume</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Centralized Deliverables Library -->
+      <div class="central-files-section">
+        <h3>Centralized Deliverables & Invoices Library</h3>
+        <p class="section-desc">Access, view, and download all official PDF tax invoices and JPG quality certificates uploaded across your orders.</p>
+        <div class="files-grid" id="centralFilesGrid">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 5: ADMIN MANAGEMENT DASHBOARD ==================== -->
+    <section id="adminTab" class="tab-pane">
+      <div class="admin-banner">
+        <div class="admin-banner-header">
+          <div class="admin-title">
+            <span class="admin-badge">BACKEND OPERATIONS</span>
+            <h2>Business Administration Console</h2>
+          </div>
+          <p>Real-time control over inventory, customer order approvals, service workflows, and digital file dispatching.</p>
+        </div>
+        <div class="admin-stats-row">
+          <div class="admin-stat-box">
+            <span class="stat-number" id="adminPendingOrders">0</span>
+            <span class="stat-name">Pending Orders</span>
+          </div>
+          <div class="admin-stat-box">
+            <span class="stat-number" id="adminPendingServices">0</span>
+            <span class="stat-name">Pending Services</span>
+          </div>
+          <div class="admin-stat-box">
+            <span class="stat-number" id="adminLowStockCount">0</span>
+            <span class="stat-name">Low Stock Alerts</span>
+          </div>
+          <div class="admin-stat-box">
+            <span class="stat-number" id="adminTotalRevenue">$0</span>
+            <span class="stat-name">Gross Volume</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Sub Navigation -->
+      <div class="admin-subnav">
+        <button class="admin-tab-btn active" data-subtab="inventory">Inventory Management</button>
+        <button class="admin-tab-btn" data-subtab="orders">Commercial Orders (<span id="adminOrdersCountBadge">0</span>)</button>
+        <button class="admin-tab-btn" data-subtab="services">Service Requests (<span id="adminServicesCountBadge">0</span>)</button>
+      </div>
+
+      <!-- Admin Subtab 1: Inventory -->
+      <div id="adminInventorySubtab" class="admin-subpane active">
+        <div class="subpane-header">
+          <h3>Current Stock & Inventory Catalog</h3>
+          <button class="btn btn-primary btn-sm" id="adminAddProductBtn">+ Add Inventory Item</button>
+        </div>
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>SKU</th>
+                <th>Unit Price</th>
+                <th>Stock Level</th>
+                <th>Status</th>
+                <th>Quick Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminInventoryTableBody">
+              <!-- Injected via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Admin Subtab 2: Orders -->
+      <div id="adminOrdersSubtab" class="admin-subpane">
+        <div class="subpane-header">
+          <h3>Customer Orders & Approval Lifecycle</h3>
+        </div>
+        <div class="admin-cards-list" id="adminOrdersList">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- Admin Subtab 3: Services -->
+      <div id="adminServicesSubtab" class="admin-subpane">
+        <div class="subpane-header">
+          <h3>Custom Service Requests & Deliverables</h3>
+        </div>
+        <div class="admin-cards-list" id="adminServicesList">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== MODALS & DRAWERS ==================== -->
+
+  <!-- Shopping Cart Drawer -->
+  <div class="drawer-overlay" id="cartDrawerOverlay">
+    <div class="drawer" id="cartDrawer">
+      <div class="drawer-header">
+        <h3>Commercial Order Summary</h3>
+        <button class="close-btn" id="closeCartBtn">&times;</button>
+      </div>
+      <div class="drawer-body">
+        <div id="cartItemsList" class="cart-items-list"></div>
+
+        <div class="order-inputs">
+          <div class="form-group">
+            <label>Delivery Destination / Shipping Address</label>
+            <textarea id="cartShippingAddressInput" rows="2" placeholder="Facility address, dock number..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Client Delivery Instructions (Optional)</label>
+            <input type="text" id="cartNotesInput" placeholder="e.g. Include calibration certificate, morning delivery">
+          </div>
+        </div>
+
+        <div class="cart-total-bar">
+          <span>Estimated Total:</span>
+          <span class="total-amount" id="cartTotalDisplay">$0.00</span>
+        </div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn btn-primary btn-block" id="checkoutSubmitBtn">Confirm & Place Commercial Order</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Service Request Modal -->
+  <div class="modal-overlay" id="serviceModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Request Custom Technical Service</h3>
+        <button class="close-btn" id="closeServiceModalBtn">&times;</button>
+      </div>
+      <form id="serviceRequestForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Service Type / Project Title</label>
+            <input type="text" id="srvFormTitle" required>
+          </div>
+          <div class="form-group">
+            <label>Technical Specifications & Requirements</label>
+            <textarea id="srvFormRequirements" rows="4" placeholder="Detail dimensions, material grade, inspection certifications, CAD specs..." required></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Urgency / Priority Level</label>
+              <select id="srvFormUrgency">
+                <option value="Normal">Normal Turnaround</option>
+                <option value="High">High Priority</option>
+                <option value="Critical">Critical / Expedited</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Target Budget ($ USD)</label>
+              <input type="number" id="srvFormBudget" value="500" min="50" step="50" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelServiceModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Service Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Add / Edit Product Modal -->
+  <div class="modal-overlay" id="productModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="productModalTitle">Add Inventory Item</h3>
+        <button class="close-btn" id="closeProductModalBtn">&times;</button>
+      </div>
+      <form id="productForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" id="prodFormName" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Category</label>
+              <input type="text" id="prodFormCategory" required>
+            </div>
+            <div class="form-group">
+              <label>SKU</label>
+              <input type="text" id="prodFormSku" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Unit Price ($)</label>
+              <input type="number" id="prodFormPrice" step="0.01" min="1" required>
+            </div>
+            <div class="form-group">
+              <label>Stock Quantity</label>
+              <input type="number" id="prodFormStock" min="0" required>
+            </div>
+            <div class="form-group">
+              <label>Min Alert</label>
+              <input type="number" id="prodFormMinAlert" min="1" value="5" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Technical Description</label>
+            <textarea id="prodFormDesc" rows="3" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelProductModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save to Inventory</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin File Upload Modal (PDF / JPG) -->
+  <div class="modal-overlay" id="uploadFileModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3>Upload Deliverable Document</h3>
+          <p class="modal-subtitle" id="uploadTargetSubtitle">For Request ID</p>
+        </div>
+        <button class="close-btn" id="closeUploadModalBtn">&times;</button>
+      </div>
+      <form id="uploadFileForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Deliverable Document Type</label>
+            <div class="radio-cards">
+              <label class="radio-card">
+                <input type="radio" name="uploadType" value="PDF" checked>
+                <span><strong>Official PDF Document</strong> (Tax Invoice / QA Inspection Report)</span>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="uploadType" value="JPG">
+                <span><strong>High-Res JPG Proof</strong> (Inspection Seal / Delivery Photo Proof)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Document Title</label>
+            <input type="text" id="uploadDocTitle" required>
+          </div>
+
+          <div class="form-group">
+            <label>Administrative Verification Remarks</label>
+            <textarea id="uploadDocRemarks" rows="2" placeholder="e.g. Dimensions verified by CMM coordinate laser measurement..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Attach Custom File (Optional, or auto-generate official certificate)</label>
+            <input type="file" id="uploadFileInput" accept=".pdf,image/jpeg,image/png">
+            <p class="form-tip">If no file is chosen, BizHub will automatically generate a digitally stamped document.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancelUploadModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-secondary">Upload & Deliver to Client</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Document Viewer Modal (PDF / JPG in-browser preview) -->
+  <div class="modal-overlay" id="docViewerModalOverlay">
+    <div class="modal doc-viewer-modal">
+      <div class="modal-header doc-viewer-header">
+        <div>
+          <h3 id="docViewerTitle">Document Title</h3>
+          <p id="docViewerMeta" class="modal-subtitle">PDF • 142 KB</p>
+        </div>
+        <div class="doc-viewer-actions">
+          <button class="btn btn-primary btn-sm" id="docViewerDownloadBtn">Download Document</button>
+          <button class="btn btn-outline btn-sm" id="docViewerPrintBtn">Print</button>
+          <button class="close-btn" id="closeDocViewerBtn">&times;</button>
+        </div>
+      </div>
+      <div class="doc-viewer-body" id="docViewerBody">
+        <!-- Rendered Document View -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Setup Modal -->
+  <div class="modal-overlay" id="firebaseModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Google Firebase Cloud Integration</h3>
+        <button class="close-btn" id="closeFirebaseModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="section-desc">By default, BizHub runs seamlessly using offline-first reactive LocalStorage. To synchronize across multiple devices via the cloud, paste your Firebase project config below:</p>
+        <div class="form-group">
+          <label>Firebase Web Config JSON</label>
+          <textarea id="firebaseConfigInput" rows="6" placeholder='{
+  "apiKey": "AIzaSy...",
+  "authDomain": "your-app.firebaseapp.com",
+  "projectId": "your-app",
+  "storageBucket": "your-app.appspot.com",
+  "messagingSenderId": "...",
+  "appId": "..."
+}'></textarea>
+        </div>
+        <p class="form-tip">Find this in Firebase Console → Project Settings → General → "Your apps" (Web app).</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="clearFirebaseBtn">Reset to Local Storage</button>
+        <button class="btn btn-primary" id="saveFirebaseBtn">Connect Firebase</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core JavaScript Application Logic -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
