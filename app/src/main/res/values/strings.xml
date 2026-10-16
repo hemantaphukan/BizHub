@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BizHub</string>
+    <string name="nav_shop">Catalog</string>
+    <string name="nav_services">Services</string>
+    <string name="nav_orders">Orders</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_admin">Admin</string>
+</resources>
